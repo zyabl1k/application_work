@@ -1,0 +1,36 @@
+version: "3"
+services:
+  app_server:
+    image: prod-server:local
+    container_name: app-server
+    build:
+      context: ../1
+      dockerfile: Docke rfile
+    ports:
+      - '4000:4000'
+    environment:
+      - PORT=4000
+      - NODE_ENV=production
+    volumes:
+      - ../1/src:/usr/src/app/src
+    networks:
+      - ps
+
+  app_web:
+    image: prod-web:local
+    container_name: app-web
+    build:
+      context: ../2
+      dockerfile: Dockerfile
+    ports:
+      - '5173:5173'
+    entrypoint: /bin/sh
+    working_dir: /app
+    volumes:
+      - ../2/src:/app
+    networks:
+      - ps
+    tty: true
+
+networks:
+  ps:
